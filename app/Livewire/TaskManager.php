@@ -70,7 +70,6 @@ class TaskManager extends Component
             ]);
             Task::create($this->newTask);
             $this->resetNewTask();
-            throw new \Exception('failed to create task');
         } catch (ValidationException $e) {
             \Illuminate\Support\Facades\Log::debug($e);
             $this->dispatch('notify', [

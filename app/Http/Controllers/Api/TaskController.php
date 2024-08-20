@@ -162,9 +162,11 @@ class TaskController extends Controller
      *     )
      * )
      */
-    public function show(Task $task)
+    public function show($task)
     {
         try {
+            $task = Task::findOrFail($task);
+
             return TaskResource::make($task);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error($e);
@@ -211,9 +213,10 @@ class TaskController extends Controller
      *     )
      * )
      */
-    public function update(StoreTaskRequest $request, Task $task)
+    public function update(StoreTaskRequest $request, $task)
     {
         try {
+            $task = Task::findOrFail($task);
             $task->update($request->validated());
 
             return TaskResource::make($task);
@@ -224,9 +227,39 @@ class TaskController extends Controller
         }
     }
 
-    public function destroy(Task $task)
+    /**
+     * @OA\Delete(
+     *     path="/tasks/{id}",
+     *     summary="Delete a task",
+     *     description="Delete a specific task by ID.",
+     *     tags={"Tasks"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the task to delete",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description=""
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Task not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     ),
+     * )
+     */
+    public function destroy($task)
     {
         try {
+            $task = Task::findOrFail($task);
             $task->delete();
 
             return response()->json(null, 204);

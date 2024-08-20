@@ -5,11 +5,12 @@ namespace App\Events;
 use App\Models\Task;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class HighPriorityTaskEvent implements ShouldBroadcast
+class HighPriorityTaskEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -42,6 +43,6 @@ class HighPriorityTaskEvent implements ShouldBroadcast
 
     public function failed(\Exception $exception)
     {
-        \Log::error('Failed to process task: ' . $this->task->id . '. Error: ' . $exception->getMessage());
+        Log::error('Failed to process task: ' . $this->task->id . '. Error: ' . $exception->getMessage());
     }
 }
