@@ -2,8 +2,8 @@
 
 namespace App\Observers;
 
-use App\Events\HighPriorityTaskEvent;
-use App\Events\LowPriorityTaskEvent;
+use App\Jobs\ProcessCriticalTask;
+use App\Jobs\ProcessOrdinaryTask;
 use App\Models\Task;
 
 class TaskObserver
@@ -14,9 +14,9 @@ class TaskObserver
     public function created(Task $task): void
     {
         if ($task->priority == Task::PRIORITY_UP) {
-            broadcast(new HighPriorityTaskEvent($task, 'created'))->toOthers();
+            ProcessCriticalTask::dispatch($task, 'created')->onQueue('high');
         } else {
-            broadcast(new LowPriorityTaskEvent($task, 'created'))->toOthers();
+            ProcessOrdinaryTask::dispatch($task, 'created')->onQueue('low');
         }
     }
 
@@ -26,9 +26,9 @@ class TaskObserver
     public function updated(Task $task): void
     {
         if ($task->priority == Task::PRIORITY_UP) {
-            broadcast(new HighPriorityTaskEvent($task, 'updated'))->toOthers();
+            ProcessCriticalTask::dispatch($task, 'updated')->onQueue('high');
         } else {
-            broadcast(new LowPriorityTaskEvent($task, 'updated'))->toOthers();
+            ProcessOrdinaryTask::dispatch($task, 'updated')->onQueue('low');
         }
     }
 

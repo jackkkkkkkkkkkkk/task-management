@@ -3,13 +3,16 @@
 namespace App\Events;
 
 use App\Models\Task;
+use Illuminate\Broadcasting\BroadcastEvent;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class LowPriorityTaskEvent implements ShouldBroadcast
+class TaskWasSaved implements ShouldBroadcastNow
+
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -25,7 +28,7 @@ class LowPriorityTaskEvent implements ShouldBroadcast
         $this->event = $event;
     }
 
-    public function broadcastOn(): Channel
+    public function broadcastOn()
     {
         return new Channel('tasks');
     }
@@ -35,8 +38,15 @@ class LowPriorityTaskEvent implements ShouldBroadcast
         return "task.$this->event";
     }
 
-    public function broadcastQueue()
+    public function broadcastWith()
     {
-        return 'low';
+        return [
+            'task' => $this->task,
+        ];
+    }
+
+    public function failed(\Exception $exception)
+    {
+        Log::error('Failed to process task: ' . $this->task->id . '. Error: ' . $exception->getMessage());
     }
 }

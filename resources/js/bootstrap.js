@@ -20,11 +20,3 @@ window.Echo = new Echo({
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     encrypted: false,
 });
-window.Echo.channel('tasks')
-    .listen('.task.updated', (e) => {
-        console.log('Task updated:', e.task);
-    });
-window.Echo.channel('tasks')
-    .listen('.task.created', (e) => {
-        console.log('Task created:', e.task);
-    });
