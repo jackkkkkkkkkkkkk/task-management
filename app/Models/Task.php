@@ -19,6 +19,9 @@ class Task extends Model
         'priority',
         'deadline',
     ];
+    protected $casts    = [
+        'deadline' => 'datetime:Y-m-d H:00',
+    ];
     const PRIORITY_LOW     = 1;
     const PRIORITY_MEDIUM  = 2;
     const PRIORITY_UP      = 3;

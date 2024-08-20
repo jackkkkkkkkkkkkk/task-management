@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 
 /**
@@ -92,7 +93,7 @@ class TaskController extends Controller
         try {
             $task = Task::create($request->validated());
 
-            return response()->json($task, 201);
+            return response()->json(TaskResource::make($task), 201);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error($e);
 
@@ -126,7 +127,7 @@ class TaskController extends Controller
         try {
             $tasks = Task::all();
 
-            return response()->json($tasks);
+            return TaskResource::collection($tasks);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error($e);
 
@@ -164,7 +165,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         try {
-            return response()->json($task);
+            return TaskResource::make($task);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error($e);
 
@@ -215,7 +216,7 @@ class TaskController extends Controller
         try {
             $task->update($request->validated());
 
-            return response()->json($task);
+            return TaskResource::make($task);
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error($e);
 
