@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use App\Models\Task;
+use Morilog\Jalali\Jalalian;
 
 class TaskManager extends Component
 {
@@ -31,9 +32,21 @@ class TaskManager extends Component
 
     public function loadTasks()
     {
-        $this->tasks['in_progress'] = Task::where('status', Task::STATUS_DOING)->get();
-        $this->tasks['postponed'] = Task::where('status', Task::STATUS_POSTPONED)->get();
-        $this->tasks['done'] = Task::where('status', Task::STATUS_DONE)->get();
+        $this->tasks['in_progress'] = Task::where('status', Task::STATUS_DOING)->get()->map(function ($task) {
+            $task['deadline'] = Jalalian::fromDateTime($task->deadline)->format('Y-m-d H:i:s');
+
+            return $task;
+        });
+        $this->tasks['postponed'] = Task::where('status', Task::STATUS_POSTPONED)->get()->map(function ($task) {
+            $task['deadline'] = Jalalian::fromDateTime($task->deadline)->format('Y-m-d H:i:s');
+
+            return $task;
+        });
+        $this->tasks['done'] = Task::where('status', Task::STATUS_DONE)->get()->map(function ($task) {
+            $task['deadline'] = Jalalian::fromDateTime($task->deadline)->format('Y-m-d H:i:s');
+
+            return $task;
+        });
     }
 
     public function updateTaskStatus($taskId, $newStatus)
@@ -70,6 +83,8 @@ class TaskManager extends Component
             ]);
             Task::create($this->newTask);
             $this->resetNewTask();
+            $this->dispatch('task-created');
+
         } catch (ValidationException $e) {
             \Illuminate\Support\Facades\Log::debug($e);
             $this->dispatch('notify', [

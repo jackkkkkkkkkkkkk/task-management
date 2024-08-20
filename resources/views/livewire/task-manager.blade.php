@@ -1,9 +1,9 @@
 <div class="container mx-auto p-4">
     <div x-data="{ open: false }" x-init="
-    Livewire.on('task-created', () => {
-        open = false;
-        console.log('Task created event received');
-    });
+     window.addEventListener('task-created', event => {
+               open = false;
+               console.log('Task created event received');
+            });
 ">
         <!-- Trigger Button -->
         <button @click="open = true" class="bg-blue-500 text-white px-4 py-2 rounded mb-1">Create New Task</button>
@@ -61,6 +61,22 @@
                     <div>
                         <h3 class="text-lg font-medium">{{ $task->title }}</h3>
                         <p class="text-gray-600 text-sm">{{ $task->description }}</p>
+                        <p class="text-gray-600 text-sm">
+                            Priority:
+                            @if($task->priority == 0)
+                                Low
+                            @elseif($task->priority == 1)
+                                Medium
+                            @else
+                                High
+                            @endif
+                        </p>
+
+                        <!-- Display Deadline -->
+                        <p class="text-gray-600 text-sm">
+                            Deadline:
+                            {{ $task->deadline ? $task->deadline->format('Y-m-d H:i:s') : 'N/A' }}
+                        </p>
                     </div>
                     <select wire:change="updateTaskStatus({{ $task->id }}, $event.target.value)"
                             class="border rounded-md p-1 text-gray-700">
@@ -92,6 +108,22 @@
                     <div>
                         <h3 class="text-lg font-medium">{{ $task->title }}</h3>
                         <p class="text-gray-600 text-sm">{{ $task->description }}</p>
+                        <p class="text-gray-600 text-sm">
+                            Priority:
+                            @if($task->priority == 0)
+                                Low
+                            @elseif($task->priority == 1)
+                                Medium
+                            @else
+                                High
+                            @endif
+                        </p>
+
+                        <!-- Display Deadline -->
+                        <p class="text-gray-600 text-sm">
+                            Deadline:
+                            {{ $task->deadline ? $task->deadline->format('Y-m-d H:i:s') : 'N/A' }}
+                        </p>
                     </div>
                     <select wire:change="updateTaskStatus({{ $task->id }}, $event.target.value)"
                             class="border rounded-md p-1 text-gray-700">
@@ -123,6 +155,22 @@
                     <div>
                         <h3 class="text-lg font-medium">{{ $task->title }}</h3>
                         <p class="text-gray-600 text-sm">{{ $task->description }}</p>
+                        <p class="text-gray-600 text-sm">
+                            Priority:
+                            @if($task->priority == 0)
+                                Low
+                            @elseif($task->priority == 1)
+                                Medium
+                            @else
+                                High
+                            @endif
+                        </p>
+
+                        <!-- Display Deadline -->
+                        <p class="text-gray-600 text-sm">
+                            Deadline:
+                            {{ $task->deadline ? $task->deadline->format('Y-m-d H:i:s') : 'N/A' }}
+                        </p>
                     </div>
                     <select wire:change="updateTaskStatus({{ $task->id }}, $event.target.value)"
                             class="border rounded-md p-1 text-gray-700">
