@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Morilog\Jalali\Jalalian;
 use Tests\TestCase;
 use Carbon\Carbon;
 
@@ -63,7 +64,7 @@ class TaskTest extends TestCase
                 'description' => 'Sample description',
                 'status'      => 2,
                 'priority'    => 2,
-                'deadline'    => $task->deadline->format('Y-m-d H:i:s'),
+                'deadline'    => Jalalian::fromDateTime($task->deadline->format('Y-m-d H:i:s'))->format('Y-m-d H:i:s'),
             ],
         ]);
     }
@@ -93,7 +94,8 @@ class TaskTest extends TestCase
                 'description' => 'Updated description',
                 'status'      => 2,
                 'priority'    => 1,
-                'deadline'    => Carbon::now()->addDays(2)->format('Y-m-d H:i:s'),
+                'deadline'    => Jalalian::fromDateTime(Carbon::now()->addDays(2)->format('Y-m-d H:i:s'))
+                    ->format('Y-m-d H:i:s'),
             ],
         ]);
 

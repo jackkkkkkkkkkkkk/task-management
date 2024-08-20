@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Morilog\Jalali\Jalalian;
 
 class TaskResource extends JsonResource
 {
@@ -20,7 +21,7 @@ class TaskResource extends JsonResource
             'description' => $this->description,
             'status'      => $this->status,
             'priority'    => $this->priority,
-            'deadline'    => $this->deadline->format('Y-m-d H:i:s'),
+            'deadline'    => $this->deadline ? Jalalian::fromDateTime($this->deadline)->format('Y-m-d H:i:s') : null,
         ];
     }
 }
